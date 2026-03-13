@@ -1,0 +1,551 @@
+{
+    "openapi": "3.1.0",
+    "info":{
+        "title": "Exercice  04 - Pokemon API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3030/",
+            "description": "Serveur de développement"
+        },
+        {
+            "url": "http://api.profs.ca",
+            "description": "Serveur en ligne"
+        }
+    ],
+    "paths": {
+    
+        "/api/pokemons/{id}": {
+
+            "get": {
+                "summary": "Afficher un pokemon selon son id",
+                "tags": ["Pokemons"],
+                "description": "Récupérer un pokemon en fonction de son id",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pokemon",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succès avec la route /api/pokemons/{id}",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "nom": {
+                                            "type": "string",
+                                            "example": "Bulbasaur"
+                                        },
+                                        "type_primaire": {
+                                            "type": "string",
+                                            "example": "Grass"
+                                        },
+                                        "type_secondaire": {
+                                            "type": "string",
+                                            "example": "Poison"
+                                        },
+                                        "pv": {
+                                            "type": "integer",
+                                            "example": 45
+                                        },
+                                        "attaque": {
+                                            "type": "integer",
+                                            "example": 49
+                                        },
+                                        "defense": {
+                                            "type": "integer",
+                                            "example": 49
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404" : {
+                        "description": "Le pokemon n'est pas trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Pokemon introuvable avec l'id 1245"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur lors de la requête SQL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la récupération du pokemon avec l'id 1245"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            },
+
+            "put": {
+                "summary": "Modifier un pokemon selon son id",
+                "tags": ["Pokemons"],
+                "description": "Mettre à jour les informations d'un pokemon en fonction de son id",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pokemon à mettre à jour",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Bulbasaur"
+                                    },
+                                    "type_primaire": {        
+                                        "type": "string",
+                                        "example": "Grass"
+                                    },
+                                    "type_secondaire": {
+                                        "type": "string",
+                                        "example": "Poison"
+                                    },
+                                    "pv": {
+                                        "type": "integer",
+                                        "example": 45
+                                    },
+                                    "attaque": {
+                                        "type": "integer",
+                                        "example": 49
+                                    },
+                                    "defense": {
+                                        "type": "integer",
+                                        "example": 49
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses" : {
+                    "200": {
+                        "description" :  "Pokemon modifié avec succès",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le pokemon id 1 a été modifié avec succès"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description" :  "Le format du JSON dans le corps de la requête est invalide",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "pv"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404" : {
+                        "description": "Le id n'existe pas dans la base de données",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le pokemon id [id] n'existe pas dans la base de données"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description" :  "Il y a eu une erreur lors de la requête SQL",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la modification du pokemon Bulbasaur"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Supprimer un pokemon selon son id",
+                "tags": ["Pokemons"],
+                "description": "Supprimer un pokemon de la base de données en fonction de son id",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Id du pokemon à supprimer",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    }
+                ],
+                "responses" : {
+                    "200" : {
+                        "description" :  "Le pokemon id [id] a été supprimé avec succès",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Le pokemon id 1 a été supprimé avec succès"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404" : {
+                        "description": "Le id n'existe pas dans la base de données",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le pokemon id [id] n'existe pas dans la base de données"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description" :  "Il y a eu une erreur lors de la requête SQL",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": 	"Echec lors de la suppression du pokemon Bulbasaur"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        },
+    
+      "/api/pokemons/liste": {
+            "get": {
+                "summary": "Afficher la liste des pokemons",
+                "tags": ["Pokemons"],
+                "description": "Récupérer la liste des pokemons avec pagination et filtrage par type",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "Numéro de la page à récupérer",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int32",
+                            "example" : 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "description": "Filtrer les pokemons par type",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example" : "Grass"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succès avec la route /api/pokemons/liste?page=2&type=grass",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "pokemons": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "nom": {
+                                                        "type": "string",
+                                                        "example": "Bulbasaur"
+                                                    },
+                                                    "type_primaire": {
+                                                        "type": "string",
+                                                        "example": "Grass"
+                                                    },
+                                                    "type_secondaire": {
+                                                        "type": "string",
+                                                        "example": "Poison"
+                                                    },
+                                                    "pv": {
+                                                        "type": "integer",
+                                                        "example": 45
+                                                    },
+                                                    "attaque": {
+                                                        "type": "integer",
+                                                        "example": 49
+                                                    },
+                                                    "defense": {
+                                                        "type": "integer",
+                                                        "example": 49
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "type": {
+                                            "type": "string",
+                                            "example": "Grass"
+                                        },
+                                        "nombrePokemonTotal": {
+                                            "type": "integer",
+                                            "example": 94
+                                        },
+                                        "page": {
+                                            "type": "integer",
+                                            "example": 2
+                                        },
+                                        "totalPage": {
+                                            "type": "integer",
+                                            "example": 4
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description": "Erreur lors de la requête SQL",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la récupération de la liste des pokemons"
+                                        }
+                                    }
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/api/pokemons/": {
+            "post": {
+                "summary": "Ajouter un pokemon",
+                "tags": ["Pokemons"],
+                "description": "Ajouter un nouveau pokemon à la base de données",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "nom": {
+                                        "type": "string",
+                                        "example": "Bulbasaur"
+                                    },
+                                    "type_primaire": {
+                                        "type": "string",
+                                        "example": "Grass"
+                                    },
+                                    "type_secondaire": {
+                                        "type": "string",
+                                        "example": "Poison"
+                                    },
+                                    "pv": {
+                                        "type": "integer",
+                                        "example": 45
+                                    },
+                                    "attaque": {
+                                        "type": "integer",
+                                        "example": 49
+                                    },
+                                    "defense": {
+                                        "type": "integer",
+                                        "example": 49
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses" : {
+                    "201" : {
+                        "description" :  "Pokemon ajouté avec succès",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "nom": {
+                                            "type": "string",
+                                            "example": "Bulbasaur"
+                                        },
+                                        "type_primaire": {
+                                            "type": "string",
+                                            "example": "Grass"
+                                        },
+                                        "type_secondaire": {
+                                            "type": "string",
+                                            "example": "Poison"
+                                        },
+                                        "pv": {
+                                            "type": "integer",
+                                            "example": 45
+                                        },
+                                        "attaque": {
+                                            "type": "integer",
+                                            "example": 49
+                                        },
+                                        "defense": {
+                                            "type": "integer",
+                                            "example": 49
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400" : {
+                        "description" :  "Le format du JSON dans le corps de la requête est invalide",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Le format des données est invalide"
+                                        },
+                                        "champ_manquant": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "pv"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500" : {
+                        "description" :  "Il y a eu une erreur lors de la requête SQL",
+                        "content" : {
+                            "application/json" : {
+                                "schema" : {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "Echec lors de la création du pokemon Bulbasaur"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
