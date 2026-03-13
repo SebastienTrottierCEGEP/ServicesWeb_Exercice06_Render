@@ -12,10 +12,13 @@ let params = {
   port: process.env.PG_PORT
 }
 
-// SSL est desactivé par default, mais on peut l'activer en mettant PG_SSL=true dans le .env
-// Nécessaire pour se connecter à la BD sur render.com de l'extérieur
-if (process.env.PG_SSL && process.env.PG_SSL.toLowerCase() === 'true') {
-  params.ssl = { rejectUnauthorized: false };
+// SSL est desactivé par default, mais on peut l'activer en ajoutant PG_SSL=true 
+//   dans le .env
+// Nécessaire pour se connecter à la BD PostgreSQL sur render.com de l'extérieur
+if (process.env.PG_SSL) {
+  params.ssl = {
+    rejectUnauthorized: false
+  }
 }
 
 const pool = new pg.Pool(params);
